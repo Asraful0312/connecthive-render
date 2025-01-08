@@ -38,6 +38,8 @@ export function LoginForm() {
   const baseUrl =
     import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
+  console.log(baseUrl);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
