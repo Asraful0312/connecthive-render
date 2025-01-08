@@ -12,27 +12,30 @@ import { fileURLToPath } from "url";
 dotenv.config();
 connectDB();
 const app = express();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-//middlewares
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.use("/public", express.static(path.join(__dirname, "public")));
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
       "https://connecthive-teal.vercel.app", // Your Vercel frontend
       "http://localhost:5173", // Local dev
+      "http://localhost:5000", // Local dev
+      "https://connecthive-render.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+app.options("*", cors());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+//middlewares
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 //routes
 app.use("/api/users", userRoutes);

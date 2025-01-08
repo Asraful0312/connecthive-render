@@ -6,7 +6,8 @@ import userAtom from "@/atoms/userAtom";
 
 const LogoutButton = () => {
   const setUser = useSetRecoilState(userAtom);
-  const baseUrl = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
   const handleLogout = async () => {
     try {

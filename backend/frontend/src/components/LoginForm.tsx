@@ -35,7 +35,8 @@ export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const setUser = useSetRecoilState(userAtom);
-  const baseUrl = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,6 +63,8 @@ export function LoginForm() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  console.log("base url", baseUrl);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

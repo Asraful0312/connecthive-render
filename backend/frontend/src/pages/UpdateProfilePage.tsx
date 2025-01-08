@@ -34,7 +34,8 @@ export default function UpdateProfile() {
   });
   const [isUpdating, setIsUpdating] = useState(false);
   const navigate = useNavigate();
-  const baseUrl = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
   const [imagePreview, setImagePreview] = useState<string | null>(
     user?.profilePic || null

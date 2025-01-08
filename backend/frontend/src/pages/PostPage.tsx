@@ -31,7 +31,8 @@ const PostPage = () => {
   const [isCommented, setIsCommented] = useState(0);
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
-  const baseUrl = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
   const currentPost = posts[0];
 

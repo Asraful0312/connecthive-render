@@ -35,7 +35,8 @@ const CreatePost = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // New state for dialog
   const currentUser = useRecoilValue(userAtom);
   const [posts, setPosts] = useRecoilState(postsAtom);
-  const baseUrl = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
   const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

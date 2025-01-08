@@ -21,7 +21,8 @@ const UserPage = () => {
 
   const [isPosting, setIsPosting] = useState(false);
   const [posts, setPosts] = useRecoilState(postsAtom);
-  const baseUrl = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
 
   useEffect(() => {
     const getUserPosts = async () => {
