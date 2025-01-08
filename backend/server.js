@@ -16,9 +16,8 @@ app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
-      "https://connecthive-teal.vercel.app", // Your Vercel frontend
-      "http://localhost:5173", // Local dev
-      "http://localhost:5000", // Local dev
+      "http://localhost:5173",
+      "http://localhost:5000",
       "https://connecthive-render.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
