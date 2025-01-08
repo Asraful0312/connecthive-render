@@ -42,6 +42,8 @@ app.use("/api/posts", postRoutes);
 
 const PORT = process.env.PORT || 5000;
 
+console.log(process.env.PORT);
+
 cloudinray.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
