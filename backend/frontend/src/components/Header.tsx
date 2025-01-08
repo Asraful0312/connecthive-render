@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <header className="pt-4 mb-6 flex items-center justify-between">
-      <Link className="text-2xl font-bold" to="/">
+      <Link title="logo" className="text-2xl font-bold" to="/">
         Connect <span className="text-xs text-purple-500">Hive</span>
       </Link>
       <div className="flex items-center gap-2">
