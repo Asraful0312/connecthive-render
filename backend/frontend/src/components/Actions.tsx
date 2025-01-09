@@ -23,8 +23,7 @@ const Actions = ({ post, setIsCommented }: Props) => {
   const [isLiking, setIsLiking] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [reply, setReply] = useState("");
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   const handleLikeAndUnlike = async () => {
     if (!user) return toast.info("You must be logged in to like a post");

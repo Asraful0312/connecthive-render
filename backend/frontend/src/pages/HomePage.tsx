@@ -8,8 +8,7 @@ import { useRecoilState } from "recoil";
 const HomePage = () => {
   const [posts, setPosts] = useRecoilState(postsAtom);
   const [loading, setLoading] = useState(false);
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   useEffect(() => {
     setLoading(true);

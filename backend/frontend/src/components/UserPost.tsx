@@ -31,8 +31,7 @@ const UserPost = ({ post }: Props) => {
   const { postedBy, img, text, replies, createdAt } = post || {};
   const [newReplies] = useState<Comment[]>(replies);
   const [isCommented, setIsCommented] = useState(false);
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   useEffect(() => {
     setIsLoading(true);

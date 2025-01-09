@@ -30,8 +30,7 @@ const UserHeader = ({ user }: Props) => {
   const [isFollowing, setIsFollowing] = useState(
     user.followers.includes(currentUser?._id)
   );
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   const copyUrl = () => {
     const currentUrl = window.location.href;

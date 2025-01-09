@@ -41,8 +41,7 @@ export function SignupForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const setUser = useSetRecoilState(userAtom);
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

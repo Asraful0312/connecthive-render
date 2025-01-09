@@ -11,8 +11,7 @@ const useDeletePost = (post: Post) => {
   const [posts, setPosts] = useRecoilState(postsAtom);
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   const handleDeletePost = async () => {
     setIsDeleting(true);

@@ -31,8 +31,7 @@ const PostPage = () => {
   const [isCommented, setIsCommented] = useState(0);
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
-  const baseUrl =
-    import.meta.env.VITE_REACT_BACKEND_BASE_URL || "http://localhost:5000";
+  const baseUrl = "https://connecthive-render.onrender.com";
 
   const currentPost = posts[0];
 
