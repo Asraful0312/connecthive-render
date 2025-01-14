@@ -10,6 +10,7 @@ import userAtom from "./atoms/userAtom";
 import UpdateProfile from "./pages/UpdateProfilePage";
 import CreatePost from "./components/CreatePost";
 import PrivateRoute from "./components/PrivateRoute";
+import ChatPage from "./pages/ChatPage";
 
 const App = () => {
   const user = useRecoilValue(userAtom);
@@ -17,7 +18,7 @@ const App = () => {
   return (
     <main className="bg-white text-black dark:bg-dark transition-colors duration-200 dark:text-white min-h-screen pb-10">
       <Toaster richColors />
-      <div className="w-full max-w-[620px] mx-auto px-5">
+      <div className={`w-full mx-auto px-5 max-w-[620px]`}>
         <Header />
 
         <Routes>
@@ -34,6 +35,14 @@ const App = () => {
             element={
               <PrivateRoute>
                 <UpdateProfile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <PrivateRoute>
+                <ChatPage />
               </PrivateRoute>
             }
           />

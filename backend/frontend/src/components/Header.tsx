@@ -3,7 +3,7 @@ import Switch from "./ui/Switch";
 import LogoutButton from "./LogoutButton";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "@/atoms/userAtom";
-
+import { LuMessageCircleMore } from "react-icons/lu";
 import { FaRegUserCircle } from "react-icons/fa";
 import { buttonVariants } from "./ui/enhancedButton";
 import authScreenAtom from "@/atoms/authAtom";
@@ -159,6 +159,10 @@ const Header = () => {
             Login
           </Link>
         )}
+
+        <Link className="shrink-0" to="/chat">
+          <LuMessageCircleMore className="shrink-0 size-5" title="chat" />
+        </Link>
 
         <Switch />
         {user && (
