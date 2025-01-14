@@ -21,6 +21,8 @@ import { BorderTrail } from "./ui/border-trail";
 import { TextShimmer } from "./ui/text-shimmer";
 import { EnhancedButton } from "./ui/enhancedButton";
 import postsAtom from "@/atoms/postAtom";
+import { BASE_URL } from "@/lib/config";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MAX_CHAR = 500;
 
@@ -35,7 +37,10 @@ const CreatePost = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // New state for dialog
   const currentUser = useRecoilValue(userAtom);
   const [posts, setPosts] = useRecoilState(postsAtom);
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
+  const { username } = useParams();
+  const user = useRecoilValue(userAtom);
+  const navigate = useNavigate();
 
   const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,13 +98,16 @@ const CreatePost = () => {
         toast.error(data.error);
         return;
       }
-
-      setLoading(false);
+      if (user.username !== username) {
+        navigate(`/${user.username}`);
+      }
       setPosts([data, ...posts]);
+      setLoading(false);
       toast.success("Post created successfully");
       setPostText("");
       setImagePreview(null);
       setSelectedFile(null);
+
       setIsDialogOpen(false); // Close the dialog
     } catch (error) {
       setLoading(false);
@@ -108,7 +116,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="fixed bottom-10 right-10 ">
+    <div className="fixed bottom-10 right-10">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <EnhancedButton

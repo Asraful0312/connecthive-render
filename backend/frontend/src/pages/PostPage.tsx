@@ -2,8 +2,8 @@ import postsAtom from "@/atoms/postAtom";
 import userAtom from "@/atoms/userAtom";
 import Actions from "@/components/Actions";
 import Comment from "@/components/Comment";
+import CreateComment from "@/components/CreateComment";
 import PostPageSkeleton from "@/components/skeletons/PostPageSkeleton";
-import { Button } from "@/components/ui/button";
 import {
   Menubar,
   MenubarContent,
@@ -14,7 +14,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import useGetUserProfile from "@/hooks/useGetUserProfile";
-import { Post } from "@/utils/types";
+import { BASE_URL } from "@/lib/config";
+import { Comment as CommentType } from "@/utils/types";
 import { formatDistanceToNow } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -28,13 +29,15 @@ const PostPage = () => {
   const [posts, setPosts] = useRecoilState(postsAtom);
   const [isDeleting, setIsDeleting] = useState(false);
   const { pid } = useParams();
-  const [isCommented, setIsCommented] = useState(0);
+  const [comments, setComments] = useState<CommentType[] | undefined>([]);
   const currentUser = useRecoilValue(userAtom);
+  const [isCommentDeleting, setIsCommentDeleting] = useState(false);
   const navigate = useNavigate();
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   const currentPost = posts[0];
 
+  // GET POST
   useEffect(() => {
     const getPost = async () => {
       setPosts([]);
@@ -48,7 +51,8 @@ const PostPage = () => {
           toast.error(data.error);
           return;
         }
-        console.log("post data", data);
+
+        setComments(data?.replies?.reverse());
 
         setPosts([data]);
       } catch (error) {
@@ -56,8 +60,9 @@ const PostPage = () => {
       }
     };
     getPost();
-  }, [pid, setPosts, isCommented]);
+  }, [baseUrl, pid, setPosts]);
 
+  // delete post
   const handleDeletePost = async () => {
     setIsDeleting(true);
     try {
@@ -80,6 +85,33 @@ const PostPage = () => {
       navigate(`/${user?.username}`);
     } catch (error) {
       setIsDeleting(false);
+      console.log(error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    setIsCommentDeleting(true);
+    try {
+      const res = await fetch(
+        `${baseUrl}/api/posts/reply/${currentPost._id}/${commentId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      if (data.error) {
+        setIsCommentDeleting(false);
+        toast.error(data.error);
+        return;
+      }
+      setIsCommentDeleting(false);
+
+      setComments(comments?.filter((c) => c._id !== commentId));
+      toast.success("Comment deleted");
+    } catch (error) {
+      setIsCommentDeleting(false);
+
       console.log(error);
     }
   };
@@ -114,7 +146,11 @@ const PostPage = () => {
               <p className="text-sm font-bold">{user?.name}</p>
               <img
                 className="size-4 ml-1"
-                src="/images/verify.png"
+                src={
+                  user?.username === "asrafulislam"
+                    ? "/images/verify-2.png"
+                    : "/images/verify.png"
+                }
                 alt="verify icon"
               />
             </div>
@@ -169,29 +205,21 @@ const PostPage = () => {
           </div>
         )}
 
-        <div className="flex my-1">
-          <Actions post={currentPost as Post} setIsCommented={setIsCommented} />
+        <div className="flex gap-2 my-1">
+          <Actions post={currentPost} />
         </div>
       </div>
 
       <Separator className="my-4" />
 
-      <div className="flex justify-between">
-        <div className="flex gap-2 items-center">
-          <p className="text-2xl">👋</p>
-          <p className="text-light-gray">
-            Get the app to like, reply and post...
-          </p>
-        </div>
+      <CreateComment postId={currentPost?._id} setComments={setComments} />
 
-        <Button variant="secondary">Get</Button>
-      </div>
       <Separator className="my-4" />
 
       <AnimatePresence>
-        {currentPost.replies.map((reply) => (
+        {comments?.map((reply, index) => (
           <motion.div
-            key={reply._id}
+            key={reply?._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -200,7 +228,13 @@ const PostPage = () => {
               ease: [0.16, 1, 0.3, 1],
             }}
           >
-            <Comment key={reply._id} reply={reply} />
+            <Comment
+              key={reply?._id}
+              reply={reply}
+              handleDeleteComment={handleDeleteComment}
+              lastComment={index === comments.length - 1}
+              isCommentDeleting={isCommentDeleting}
+            />
           </motion.div>
         ))}
       </AnimatePresence>

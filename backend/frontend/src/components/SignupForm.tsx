@@ -13,8 +13,10 @@ import {
 import { useSetRecoilState } from "recoil";
 import authScreenAtom from "@/atoms/authAtom";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import userAtom from "@/atoms/userAtom";
+import { BASE_URL } from "@/lib/config";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   name: string;
@@ -41,7 +43,11 @@ export function SignupForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const setUser = useSetRecoilState(userAtom);
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const navigate = useNavigate();
+  const baseUrl = BASE_URL;
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -101,6 +107,7 @@ export function SignupForm() {
         localStorage.setItem("user-data", JSON.stringify(data));
         setUser(data);
         toast.success("Signup successful");
+        navigate("/");
       } catch (error) {
         console.error("Signup error:", error);
       } finally {
@@ -124,6 +131,7 @@ export function SignupForm() {
                 id="name"
                 name="name"
                 value={formData.name}
+                placeholder="Name"
                 onChange={handleChange}
                 required
               />
@@ -136,6 +144,7 @@ export function SignupForm() {
               <Input
                 id="username"
                 name="username"
+                placeholder="Username"
                 value={formData.username}
                 onChange={handleChange}
                 required
@@ -149,6 +158,7 @@ export function SignupForm() {
               <Input
                 id="email"
                 name="email"
+                placeholder="Email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -160,14 +170,32 @@ export function SignupForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  className="pe-9"
+                  placeholder="Password"
+                  value={formData.password}
+                  required
+                  onChange={handleChange}
+                  type={isVisible ? "text" : "password"}
+                />
+                <button
+                  className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                  type="button"
+                  onClick={toggleVisibility}
+                  aria-label={isVisible ? "Hide password" : "Show password"}
+                  aria-pressed={isVisible}
+                  aria-controls="password"
+                >
+                  {isVisible ? (
+                    <EyeOff size={16} strokeWidth={2} aria-hidden="true" />
+                  ) : (
+                    <Eye size={16} strokeWidth={2} aria-hidden="true" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password}</p>
               )}

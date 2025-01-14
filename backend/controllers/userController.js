@@ -3,6 +3,7 @@ import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCooki
 import User from "./../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
+import Post from "./../models/postModel.js";
 
 export const getUserProfile = async (req, res) => {
   // either fetch user using username or id
@@ -30,6 +31,80 @@ export const getUserProfile = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log("get users error: " + error.message);
+  }
+};
+
+export const getSuggestedUsers = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    if (!mongoose.isValidObjectId(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    // Fetch current user's following list
+    const currentUser = await User.findById(userId).select("following");
+    if (!currentUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Fetch up to 5 suggested users not followed by the current user
+    const suggestedUsers = await User.find({
+      _id: { $ne: userId, $nin: currentUser.following },
+    })
+      .select("-password -updatedAt")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.status(200).json(suggestedUsers);
+  } catch (error) {
+    console.error("Error fetching suggested users:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const searchUser = async (req, res) => {
+  const { term } = req.query;
+
+  if (!term) {
+    return res.status(400).json({ error: "Please provide a search term" });
+  }
+
+  try {
+    const result = await User.aggregate([
+      {
+        $search: {
+          index: "search",
+          autocomplete: {
+            query: term,
+            path: "username",
+            fuzzy: {
+              maxEdits: 2,
+              prefixLength: 0,
+              maxExpansions: 50,
+            },
+          },
+        },
+      },
+      {
+        $limit: 5, // Correct usage of limit
+      },
+      {
+        $project: {
+          _id: 1,
+          username: 1,
+          name: 1,
+          profilePic: 1,
+          followers: { $size: "$followers" },
+          following: { $size: "$following" },
+        },
+      },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -210,6 +285,19 @@ export const updateUser = async (req, res) => {
     user.bio = bio || user.bio;
 
     await user.save();
+
+    //find all the posts that this user has replied and change the username and profile picture
+    await Post.updateMany(
+      { "replies.userId": userId },
+      {
+        $set: {
+          "replies.$[reply].username": user.username,
+          "replies.$[reply].profilePic": user.profilePic,
+        },
+      },
+      { arrayFilters: [{ "reply.userId": userId }] }
+    );
+
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     console.error("Update error:", error);

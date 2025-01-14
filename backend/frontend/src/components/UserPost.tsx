@@ -10,7 +10,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "./ui/menubar";
-import { Comment, Post, User } from "@/utils/types";
+import { Post, User } from "@/utils/types";
 import { formatDistanceToNow } from "date-fns";
 import UserPostSkeleton from "./skeletons/UserPostSkeleton";
 import useDeletePost from "@/hooks/useDeletePost";
@@ -18,6 +18,8 @@ import { useRecoilValue } from "recoil";
 import userAtom from "@/atoms/userAtom";
 import { TextShimmer } from "./ui/text-shimmer";
 import { toast } from "sonner";
+import { BASE_URL } from "@/lib/config";
+import { FaRegComment } from "react-icons/fa";
 
 type Props = {
   post: Post;
@@ -29,15 +31,12 @@ const UserPost = ({ post }: Props) => {
   const { handleDeletePost, isDeleting } = useDeletePost(post);
   const [isLoading, setIsLoading] = useState(false);
   const { postedBy, img, text, replies, createdAt } = post || {};
-  const [newReplies] = useState<Comment[]>(replies);
-  const [isCommented, setIsCommented] = useState(false);
-  const baseUrl = "https://connecthive-render.onrender.com";
 
   useEffect(() => {
     setIsLoading(true);
     const getUser = async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/users/profile/` + postedBy, {
+        const res = await fetch(`${BASE_URL}/api/users/profile/` + postedBy, {
           method: "GET",
           credentials: "include",
         });
@@ -99,7 +98,7 @@ const UserPost = ({ post }: Props) => {
             <div className="relative w-full">
               {replies?.length === 0 && <p className="text-center">😒</p>}
 
-              {newReplies && newReplies[0] && (
+              {/* {newReplies && newReplies[0] && (
                 <Avatar className="size-7 absolute bottom-0 left-0 md:left-1 p-[2px]">
                   <AvatarImage
                     src={newReplies[0].userProfilePic || "/images/user.jpg"}
@@ -115,16 +114,16 @@ const UserPost = ({ post }: Props) => {
                     alt={newReplies[2].username}
                   />
                 </Avatar>
-              )}
+              )} */}
 
-              {newReplies && newReplies[1] && (
+              {/* {newReplies && newReplies[1] && (
                 <Avatar className="size-7 absolute bottom-0 right-[-5px] p-[2px]">
                   <AvatarImage
                     src={newReplies[1].userProfilePic || "/images/user.jpg"}
                     alt={newReplies[1].username}
                   />
                 </Avatar>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -136,7 +135,11 @@ const UserPost = ({ post }: Props) => {
                 </Link>
                 <img
                   className="size-4 ml-1"
-                  src="/images/verify.png"
+                  src={
+                    user?.username === "asrafulislam"
+                      ? "/images/verify-2.png"
+                      : "/images/verify.png"
+                  }
                   alt="verify icon"
                 />
               </div>
@@ -193,10 +196,27 @@ const UserPost = ({ post }: Props) => {
             )}
 
             <div className="flex my-1">
-              <Actions
-                post={post}
-                setIsCommented={() => setIsCommented(isCommented)}
-              />
+              <div className="flex items-center">
+                {post.replies.slice(0, 3).map((reply, index) => (
+                  <Avatar
+                    className={`size-7 border-2 border-purple-500 ${
+                      index === 0
+                        ? ""
+                        : index === 1
+                        ? "-translate-x-[50%]"
+                        : "-translate-x-[100%]"
+                    }`}
+                  >
+                    <AvatarImage src={reply.userProfilePic} alt={"profile"} />
+                  </Avatar>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 ml-2">
+                <Link to={`/${postedBy}/post/${post._id}`}>
+                  <FaRegComment className={`size-4 `} />
+                </Link>
+                <Actions post={post} />
+              </div>
             </div>
           </div>
         </div>

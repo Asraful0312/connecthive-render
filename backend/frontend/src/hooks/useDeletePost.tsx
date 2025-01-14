@@ -1,5 +1,6 @@
 import postsAtom from "@/atoms/postAtom";
 import userAtom from "@/atoms/userAtom";
+import { BASE_URL } from "@/lib/config";
 import { Post } from "@/utils/types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ const useDeletePost = (post: Post) => {
   const [posts, setPosts] = useRecoilState(postsAtom);
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   const handleDeletePost = async () => {
     setIsDeleting(true);

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import UserPage from "./pages/UserPage";
 import PostPage from "./pages/PostPage";
 import Header from "./components/Header";
@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "./atoms/userAtom";
 import UpdateProfile from "./pages/UpdateProfilePage";
 import CreatePost from "./components/CreatePost";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   const user = useRecoilValue(userAtom);
@@ -22,30 +23,27 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={user ? <HomePage /> : <Navigate to="/auth" />}
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
           />
           <Route
             path="/update"
-            element={user ? <UpdateProfile /> : <Navigate to="/auth" />}
-          />
-          <Route path="/auth" element={user ? <HomePage /> : <AuthPage />} />
-
-          <Route
-            path="/:username"
             element={
-              user ? (
-                <>
-                  <UserPage />
-                  <CreatePost />
-                </>
-              ) : (
-                <UserPage />
-              )
+              <PrivateRoute>
+                <UpdateProfile />
+              </PrivateRoute>
             }
           />
+          <Route path="/auth" element={<AuthPage />} />
+
+          <Route path="/:username" element={<UserPage />} />
           <Route path="/:username/post/:pid" element={<PostPage />} />
         </Routes>
       </div>
+      {user && <CreatePost />}
     </main>
   );
 };

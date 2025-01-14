@@ -3,10 +3,11 @@ import { Button } from "./ui/button";
 import { useSetRecoilState } from "recoil";
 import { toast } from "sonner";
 import userAtom from "@/atoms/userAtom";
+import { BASE_URL } from "@/lib/config";
 
 const LogoutButton = () => {
   const setUser = useSetRecoilState(userAtom);
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   const handleLogout = async () => {
     try {

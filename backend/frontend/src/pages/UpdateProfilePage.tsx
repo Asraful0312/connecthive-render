@@ -13,6 +13,7 @@ import { TextMorph } from "@/components/ui/text-morph";
 import { Loader2 } from "lucide-react";
 
 import UserProfileAvatar from "@/components/UserProfileAvatar";
+import { BASE_URL } from "@/lib/config";
 
 interface Profile {
   name: string;
@@ -34,7 +35,7 @@ export default function UpdateProfile() {
   });
   const [isUpdating, setIsUpdating] = useState(false);
   const navigate = useNavigate();
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   const [imagePreview, setImagePreview] = useState<string | null>(
     user?.profilePic || null

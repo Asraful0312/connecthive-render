@@ -12,9 +12,11 @@ import {
 
 import { useSetRecoilState } from "recoil";
 import authScreenAtom from "@/atoms/authAtom";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import userAtom from "@/atoms/userAtom";
+import { BASE_URL } from "@/lib/config";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   password: string;
@@ -35,7 +37,11 @@ export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const setUser = useSetRecoilState(userAtom);
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const navigate = useNavigate();
+  const baseUrl = BASE_URL;
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,8 +69,6 @@ export function LoginForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  console.log("base url", baseUrl);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
@@ -87,6 +91,7 @@ export function LoginForm() {
         localStorage.setItem("user-data", JSON.stringify(data));
         setUser(data);
         toast.success("Login successful");
+        navigate("/");
       } catch (error) {
         console.error("Signup error:", error);
       } finally {
@@ -111,6 +116,7 @@ export function LoginForm() {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
+                placeholder="Username"
                 required
               />
               {errors.username && (
@@ -119,18 +125,37 @@ export function LoginForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  className="pe-9"
+                  placeholder="Password"
+                  value={formData.password}
+                  required
+                  onChange={handleChange}
+                  type={isVisible ? "text" : "password"}
+                />
+                <button
+                  className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                  type="button"
+                  onClick={toggleVisibility}
+                  aria-label={isVisible ? "Hide password" : "Show password"}
+                  aria-pressed={isVisible}
+                  aria-controls="password"
+                >
+                  {isVisible ? (
+                    <EyeOff size={16} strokeWidth={2} aria-hidden="true" />
+                  ) : (
+                    <Eye size={16} strokeWidth={2} aria-hidden="true" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password}</p>
               )}
             </div>
+
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
                 <p className="flex items-center gap-2">

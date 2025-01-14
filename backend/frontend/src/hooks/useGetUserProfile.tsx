@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/lib/config";
 import { User } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -7,7 +8,7 @@ const useGetUserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const { username } = useParams();
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   useEffect(() => {
     const getUser = async () => {
@@ -35,7 +36,7 @@ const useGetUserProfile = () => {
     };
 
     getUser();
-  }, [username]);
+  }, [baseUrl, username]);
 
   return { loading, user };
 };

@@ -17,7 +17,7 @@ app.use(
     origin: [
       process.env.FRONTEND_URL,
       "http://localhost:5173",
-      "https://connecthive-render.onrender.com",
+      "http://localhost:5000",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
@@ -40,8 +40,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 
 const PORT = process.env.PORT || 5000;
-
-console.log(process.env.PORT);
 
 cloudinray.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

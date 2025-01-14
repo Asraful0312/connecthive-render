@@ -4,6 +4,7 @@ import UserSkeleton from "@/components/skeletons/UserSkeleton";
 import UserHeader from "@/components/UserHeader";
 import UserPost from "@/components/UserPost";
 import useGetUserProfile from "@/hooks/useGetUserProfile";
+import { BASE_URL } from "@/lib/config";
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ const UserPage = () => {
 
   const [isPosting, setIsPosting] = useState(false);
   const [posts, setPosts] = useRecoilState(postsAtom);
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   useEffect(() => {
     const getUserPosts = async () => {

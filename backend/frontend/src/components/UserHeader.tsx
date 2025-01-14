@@ -18,19 +18,21 @@ import { TextMorph } from "./ui/text-morph";
 import { TextShimmer } from "./ui/text-shimmer";
 import UserProfileAvatar from "./UserProfileAvatar";
 import { buttonVariants, EnhancedButton } from "./ui/enhancedButton";
+import { ADMIN_FOLLOWERS, BASE_URL } from "@/lib/config";
 
 type Props = {
   user: User;
 };
 
 const UserHeader = ({ user }: Props) => {
-  const { _id, name, username, profilePic, bio, followers } = user || {};
+  const { _id, name, username, profilePic, bio, followers, following } =
+    user || {};
   const currentUser = useRecoilValue(userAtom);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isFollowing, setIsFollowing] = useState(
     user.followers.includes(currentUser?._id)
   );
-  const baseUrl = "https://connecthive-render.onrender.com";
+  const baseUrl = BASE_URL;
 
   const copyUrl = () => {
     const currentUrl = window.location.href;
@@ -86,13 +88,11 @@ const UserHeader = ({ user }: Props) => {
             </div>
           </div>
           <div>
-            {profilePic && (
-              <UserProfileAvatar
-                imageUrl={profilePic || "/images/user.jpg"}
-                alt={username}
-                className="size-16 md:size-20 rounded-full object-cover"
-              />
-            )}
+            <UserProfileAvatar
+              imageUrl={profilePic || "/images/user.jpg"}
+              alt={username}
+              className="size-16 md:size-20 rounded-full object-cover"
+            />
           </div>
         </div>
 
@@ -129,12 +129,22 @@ const UserHeader = ({ user }: Props) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <p className="text-light-gray text-sm">
-              {followers.length >= 1000
-                ? `${followers.length}k`
-                : followers.length}{" "}
+              {user.username === "asrafulislam"
+                ? (ADMIN_FOLLOWERS + followers.length).toLocaleString()
+                : followers.length >= 1000
+                ? `${(followers.length / 1000).toFixed(1)}k`
+                : followers.length.toLocaleString()}{" "}
               followers
             </p>
+
             <div className="size-[5px] bg-light-gray rounded-full" />
+
+            <p className="text-light-gray text-sm">
+              {following.length > 1000
+                ? (following.length / 1000).toFixed(1) + "k"
+                : following.length.toLocaleString()}{" "}
+              following
+            </p>
 
             <EnhancedButton
               className="text-light-gray"
