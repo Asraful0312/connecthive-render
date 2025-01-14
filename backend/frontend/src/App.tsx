@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import UserPage from "./pages/UserPage";
 import PostPage from "./pages/PostPage";
 import Header from "./components/Header";
@@ -14,13 +14,19 @@ import ChatPage from "./pages/ChatPage";
 
 const App = () => {
   const user = useRecoilValue(userAtom);
+  const location = useLocation();
 
   return (
     <main className="bg-white text-black dark:bg-dark transition-colors duration-200 dark:text-white min-h-screen pb-10">
       <Toaster richColors />
       <div className={`w-full mx-auto px-5 max-w-[620px]`}>
         <Header />
-
+      </div>
+      <div
+        className={`w-full mx-auto px-5 ${
+          location.pathname === "/chat" ? "max-w-[750px]" : "max-w-[620px]"
+        }`}
+      >
         <Routes>
           <Route
             path="/"

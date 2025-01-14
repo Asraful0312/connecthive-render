@@ -140,7 +140,7 @@ const Header = () => {
           <Input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Type a command or search..."
+            placeholder="Search..."
           />
           <div className="space-y-3 mt-3">{content}</div>
         </div>
