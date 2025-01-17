@@ -35,8 +35,6 @@ const CreateComment = ({ postId, setComments }: IProps) => {
       const data = await res.json();
       if (data.error) return toast.error(data.error);
 
-      console.log("data", data);
-
       setComments(data?.replies.reverse());
       toast.success("Reply posted successfully");
 

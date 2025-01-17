@@ -4,6 +4,7 @@ import connectDB from "./db/connectDB.js";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import messagesRoutes from "./routes/messagesRoutes.js";
 import { v2 as cloudinray } from "cloudinary";
 import cors from "cors";
 import path from "path";
@@ -38,6 +39,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 //routes
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/messages", messagesRoutes);
 
 const PORT = process.env.PORT || 5000;
 

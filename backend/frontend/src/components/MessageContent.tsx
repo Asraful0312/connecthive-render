@@ -22,7 +22,7 @@ const MessageContent = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 mt-4 h-[380px] overflow-y-scroll px-3 w-full custom-scroll ">
+      <div className="flex flex-col gap-6 mt-4 h-[60dvh] overflow-y-scroll px-3 w-full custom-scroll ">
         {isMessageLoading &&
           [...Array(5)].map((_, index) => (
             <div

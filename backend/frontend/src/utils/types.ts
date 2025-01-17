@@ -41,3 +41,21 @@ export type Comment = {
   username: string;
   _id: string;
 };
+
+export type ParticipantsType = {
+  _id: string;
+  username: string;
+  profilePic: string;
+};
+
+export type ConversationType = {
+  lastMessage: {
+    text: string;
+    sender: string;
+  };
+  _id: string;
+  participants: ParticipantsType[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
